@@ -1,12 +1,14 @@
 import { Page } from "@playwright/test";
+import { removeSlashUrl } from "../../utils";
 
 export class LoginPage{
 
     locatorUsername = '#user-name';
     locatorPassword = '#password';
     locatorBtLogin = '#login-button';
+    locatorErrorMessage = '[data-test="error"]';
 
-    baseUrl = 'https://www.saucedemo.com/';
+    baseUrl = 'https://www.saucedemo.com';
 
     /**
      * 
@@ -37,5 +39,19 @@ export class LoginPage{
     async clickLogin(){
         await this.page.click(this.locatorBtLogin);
         // await this.page.locator(this.locatorBtLogin).nth(3).click(); // click btn n = 3
+    }
+
+    async getErrorMessage(){
+        try{
+            return await this.page.locator(this.locatorErrorMessage).textContent();
+        } catch (e) { }
+        
+        return "";
+    }
+
+    isValidUrl(){
+        const url = removeSlashUrl(this.page.url());
+        console.log(url, this.baseUrl, this.page.url());
+        return url === this.baseUrl;
     }
 }
