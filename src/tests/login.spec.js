@@ -1,6 +1,10 @@
 // @ts-check
 import { expect } from '@playwright/test';
 import { test } from './pages/base';
+import { invalidUsers, validUsers } from '../test-data/users';
+
+
+test.describe('LOGIN FUNCTION', () => {
 
 test.beforeEach(async ({ loginPage }) => {
   await loginPage.goto();
@@ -35,7 +39,7 @@ test('Should show an error message if log in without a password', async ({ login
   expect(loginPage.isValidUrl()).toBe(true);
 });
 
-test.only('Should show an error message if log in with both fields blank', async ({ loginPage }) => {
+test('Should show an error message if log in with both fields blank', async ({ loginPage }) => {
   loginPage.fillUsernamePassword('','');
   loginPage.clickLogin();
 
@@ -44,5 +48,25 @@ test.only('Should show an error message if log in with both fields blank', async
   expect(loginPage.isValidUrl()).toBe(true);
 });
 
-// test('Should logged in successfully with valid credentials', async ({ loginPage }) => {});
-// test('Should logged in fails with an error message when using invalid credentials', async ({ loginPage }) => {});
+validUsers.forEach(({ username, password })=>{
+  test(`Should logged in successfully with valid credentials: ${username}`, async ({ loginPage }) => {
+      await loginPage.fillUsernamePassword(username, password);
+      await loginPage.clickLogin();
+
+      expect(await loginPage.getErrorMessage()).not.toContain('is required');
+      expect(loginPage.isValidUrl()).toBe(false);
+  });
+});
+
+
+invalidUsers.forEach(({ username, password })=>{
+  test(`Should logged in fails with an error message when using invalid credentials: ${username}`, async ({ loginPage }) => {
+      await loginPage.fillUsernamePassword(username, password);
+      await loginPage.clickLogin();
+
+      expect(await loginPage.getErrorMessage()).toContain('Epic sadface');
+      expect(loginPage.isValidUrl()).toBe(true);
+  })
+});
+
+});
