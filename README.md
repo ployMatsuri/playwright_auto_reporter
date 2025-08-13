@@ -43,3 +43,7 @@ npx playwright test
 เมื่อรันเสร็จ สถานะของแต่ละ Test Case จะถูกอัปเดตใน Google Sheet อัตโนมัติ
 
 
+
+[SwagLabs](https://github.com/user-attachments/assets/116b39e1-054e-4e19-b951-b114d2ffb2d0)
+
+
