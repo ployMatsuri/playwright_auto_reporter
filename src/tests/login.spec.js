@@ -1,6 +1,6 @@
 // @ts-check
 import { expect } from '@playwright/test';
-import { test } from './pages/test-setup';
+import { test } from '../pages/test-setup';
 import { invalidUsers, validUsers } from '../test-data/users';
 
 test.describe('LOGIN FUNCTION', () => {

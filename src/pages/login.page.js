@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { removeSlashUrl } from "../../utils";
+import { removeSlashUrl } from "../utils";
 
 export class LoginPage{
 
