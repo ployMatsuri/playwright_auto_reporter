@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { removeSlashUrl } from "../utils";
 
 export class ProductPage {
@@ -12,7 +12,7 @@ export class ProductPage {
 
     constructor(page){
         this.page = page;
-        this.product = page.locator('.inventory_item');
+        this.products = page.locator('.inventory_item');
     }
 
     async goto(){
@@ -24,15 +24,21 @@ export class ProductPage {
         return url === this.baseUrl;
     }
 
-    async addAllProduct(){
-        const countProduct = await this.product.count();
-        console.log(countProduct);
-        // for(let i=0; i< countProduct; i++){
-        //     const button = await this.product.nth(i).locator('.btn.btn_primary.btn_small.btn_inventory');
-        //     await button.waitFor({ state: 'visible' });
-        //     await button.click();
-        //     console.log(i);
-        // }
-        return countProduct;
+    async addAllProduct() {
+        const countProducts = await this.products.count();
+        console.log("Total products:", countProducts);
+
+        for (let i = 0; i < countProducts; i++) 
+        {
+            let product = this.products.nth(i);
+            await product.locator('Button:has-text("Add to cart")').click();
+            console.log(`product ${i} has added to cart`);
+
+            const updateButtonText = await product.locator('button').textContent();
+            
+            expect(updateButtonText?.trim()).toBe("Remove");
+            await this.page.waitForTimeout(2000);
+        }
+        return countProducts;
     }
 }
