@@ -11,6 +11,8 @@ test.describe('PRODUCT FUNCTION', ()=>{
 
     test.only('Add, Remove item', async ({ productPage }) => {
         expect(productPage.isValidUrl()).toBe(true);
+        expect(await productPage.getCartItemCount()).toBe(0);
         await productPage.addAllProduct();
+        expect(await productPage.getCartItemCount()).toBe(await productPage.allProducts());
         });
     });

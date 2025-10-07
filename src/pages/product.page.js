@@ -2,6 +2,7 @@ import { expect, Page } from "@playwright/test";
 import { removeSlashUrl } from "../utils";
 
 export class ProductPage {
+    
     baseUrl = 'https://www.saucedemo.com/inventory.html';
     btnAddToCart = '.btn btn_primary btn_small btn_inventory ';
 
@@ -24,9 +25,14 @@ export class ProductPage {
         return url === this.baseUrl;
     }
 
-    async addAllProduct() {
+    async allProducts(){
         const countProducts = await this.products.count();
         console.log("Total products:", countProducts);
+        return  countProducts;
+    }
+
+    async addAllProduct() {
+        const countProducts = await this.allProducts();
 
         for (let i = 0; i < countProducts; i++) 
         {
@@ -37,8 +43,17 @@ export class ProductPage {
             const updateButtonText = await product.locator('button').textContent();
             
             expect(updateButtonText?.trim()).toBe("Remove");
-            await this.page.waitForTimeout(2000);
+            await this.page.waitForTimeout(1500);
         }
-        return countProducts;
+    }
+
+    async getCartItemCount() {
+        const badge = this.page.locator('#shopping_cart_container > a > span')
+        const count = await badge.count();
+        console.log("Product in cart: ", count);
+        if(count === 0){
+            return 0;
+        } 
+        else return parseInt(await badge.textContent()) || 0;
     }
 }
